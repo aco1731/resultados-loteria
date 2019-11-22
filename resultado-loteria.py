@@ -16,14 +16,18 @@ async def get_url(url, session):
 
 async def busca_resultado(url, session):
     html = await get_url(url, session)
-    #Identifica o endpoint da API de resultados lotericos.
+    
+    
+    
     soup = bs4.BeautifulSoup(html, 'html.parser')
+    #Localiza a url BASE e o endpoint da API de resultados.
     urlBase = soup.find("base")['href']
     urlBuscarResultado = soup.find("input", {"id": "urlBuscarResultado", "type":"hidden"})['value']
-    #Pega o JSON com os resultados lotericos da API.
+    
+    #Consulta a API.
     resultado = json.loads(await get_url(urlBase + urlBuscarResultado,session))
     
-    print(url.split('/')[-2].upper()) #Nome do jogo. Megasena e etc..
+    print(url.split('/')[-2].upper()) #Identifica o nome do jogo(ex: Megasena).
     print("Concurso:", resultado['proximoConcurso'])
     print("Resultado:",resultado['resultadoOrdenado'])
     print('------------')
